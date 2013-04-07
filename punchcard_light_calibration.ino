@@ -2,7 +2,7 @@
  * Uses LED lights to detect visible light.
  */
 
-#define TOLERANCE 0.6
+#define TOLERANCE 3500
 #define MAX 31000
 
 #define N1 2
@@ -51,23 +51,12 @@ void setup(void) {
   Serial.print("Darkness: ");
   Serial.println(DARKNESS);
   Serial.println("Initialization done!");
-  
-  for(int i = 2; i <= 10; i += 2) {
-    digitalWrite(i, LOW);
-    digitalWrite(i + 1, HIGH);
-  }
-  delay(1000);
-    for(int i = 2; i <= 10; i += 2) {
-    //digitalWrite(i, HIGH);
-    digitalWrite(i + 1, LOW);
-  }
-  delay(1000);
 }
 
 void loop(void) {
   readerTest();
   /*
-  //Serial.println(getValue(1));
+  Serial.print(getValue(1));
   // TODO test this code!
   if(!CARD_ON) {
     CARD_ON = inputOn();
@@ -80,7 +69,7 @@ void loop(void) {
     for(int i = 4; i > 0; i--) {
       Serial.print(getValue(i));
     }
-    Serial.print('\n');
+    //Serial.print('\n');
     HALF_BYTE++;
     HALF_BYTE_READ = true; // Don't reread same line
   }
@@ -134,9 +123,8 @@ boolean inputOn(void) {
  */
 char getValue(int row) {
   int pin = row * 2;
-  unsigned int x = getReading(pin, pin + 1);
-  // TODO Refine the tolerance before the demo.
-  return ((x / DARKNESS) > TOLERANCE) ? '0' : '1';
+  int x = getReading(pin, pin + 1);
+  return (x > 9100) ? '1' : '0';
 }
 
 /**

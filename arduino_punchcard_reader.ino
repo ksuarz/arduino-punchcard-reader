@@ -28,14 +28,16 @@ boolean CARD_ON, HALF_BYTE_READ;
 
 void setup(void) {
   Serial.begin(9600);
-  Serial.println("Loading...");
+  //Serial.println("Loading...");
   
   // Init some constants yo
+
   CARD_ON = true;
   HALF_BYTE = 0;
   HALF_BYTE_READ = false;
   
   // Take the average of the light and darkness readings
+  /*
   unsigned int x = getReading(SPEC_N, SPEC_P);
   x += getReading(SPEC_N, SPEC_P);
   x += getReading(SPEC_N, SPEC_P);
@@ -44,20 +46,22 @@ void setup(void) {
   x += getReading(N2, P2);
   x += getReading(N3, P3);
   DARKNESS = x / 3;
-  
+  */
   // Print it to output
+  /*
   Serial.print("Ambient light: ");
   Serial.println(AMBIENT);
   Serial.print("Darkness: ");
   Serial.println(DARKNESS);
   Serial.println("Initialization done!");
+  */
   
   for(int i = 2; i <= 10; i += 2) {
     digitalWrite(i, LOW);
     digitalWrite(i + 1, HIGH);
   }
   delay(1000);
-    for(int i = 2; i <= 10; i += 2) {
+  for(int i = 2; i <= 10; i += 2) {
     //digitalWrite(i, HIGH);
     digitalWrite(i + 1, LOW);
   }
@@ -65,9 +69,9 @@ void setup(void) {
 }
 
 void loop(void) {
-  readerTest();
-  /*
-  //Serial.println(getValue(1));
+  //readerTest();
+  
+  //Serial.print(getValue(1));
   // TODO test this code!
   if(!CARD_ON) {
     CARD_ON = inputOn();
@@ -80,7 +84,7 @@ void loop(void) {
     for(int i = 4; i > 0; i--) {
       Serial.print(getValue(i));
     }
-    Serial.print('\n');
+    //Serial.print('\n');
     HALF_BYTE++;
     HALF_BYTE_READ = true; // Don't reread same line
   }
@@ -89,12 +93,13 @@ void loop(void) {
   }
   
   // Test if the card has been fully read.
-  if(HALF_BYTE % 8 == 0) {
+  if(HALF_BYTE > 7) {
+    //Serial.println("Read a card yay! 2 second delay");
     HALF_BYTE = 0;
     CARD_ON = false;
     delay(2000);
   }
-  */
+  
 }
 
 /**
@@ -136,7 +141,8 @@ char getValue(int row) {
   int pin = row * 2;
   unsigned int x = getReading(pin, pin + 1);
   // TODO Refine the tolerance before the demo.
-  return ((x / DARKNESS) > TOLERANCE) ? '0' : '1';
+  //return ((x / DARKNESS) > TOLERANCE) ? '0' : '1';
+  return (x > 9500) ? '0' : '1';
 }
 
 /**
